@@ -170,4 +170,10 @@ WARNING: This tweak has not been extensively tested and could potentially break 
     <string name="lab_confirm_title">Confirm change</string>
     <string name="lab_confirm_apply">This will change:\n\nFlag set: %1$s\nFlag: %2$s\nType: %3$s\nNew value: %4$s\n\nA backup is saved first.</string>
     <string name="lab_confirm_remove_all">This deletes every row in Play Services\' flag override tables, for all apps, returning them to the empty state they had before this app was used.\n\nA backup is saved first.</string>
+    <string name="browser_title">Flag browser (read-only)</string>
+    <string name="browser_search">Search flags, e.g. rail, widescreen, rotary</string>
+    <string name="browser_copy">Copy shown flags</string>
+    <string name="browser_copied">Copied %1$d flags</string>
+    <string name="browser_count">Showing %1$d of %2$d flags</string>
+    <string name="browser_empty">No flags could be read for this flag set.</string>
 </resources>

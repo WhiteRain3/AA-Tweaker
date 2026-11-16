@@ -28,7 +28,50 @@ public final class RootSql {
     /** -header: print column names before the rows of each query, like sqlite3 -header. */
     private static boolean header;
 
+    /** -flags: the SQL argument is a config package name; print its decoded flags instead. */
+    private static boolean flagsMode;
+
     private RootSql() {
+    }
+
+    /**
+     * Prints "type|name|value" for every flag Play Services currently holds for a config package.
+     * Uses the partitions of the package's committed state; later partitions win over earlier ones.
+     */
+    private static boolean dumpFlags(String path, String configPackage) {
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(path, null,
+                SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+        java.util.Map<String, PhenotypeFlags.Flag> merged = new java.util.TreeMap<>();
+        int partitions = 0;
+        int failed = 0;
+        try {
+            Cursor c = db.rawQuery("SELECT pp.flags_content FROM config_packages cp "
+                    + "JOIN experiment_states_to_partitions esp ON esp.experiment_state_id = cp.committed_experiment_state_id "
+                    + "JOIN param_partitions pp ON pp.param_partition_id = esp.param_partition_id "
+                    + "WHERE cp.name = ? ORDER BY esp.ordinal", new String[]{configPackage});
+            try {
+                while (c.moveToNext()) {
+                    partitions++;
+                    try {
+                        for (PhenotypeFlags.Flag f : PhenotypeFlags.decode(c.getBlob(0))) {
+                            merged.put(f.name, f);
+                        }
+                    } catch (Exception e) {
+                        failed++;
+                        System.err.println("Warning: could not decode a partition: " + e.getMessage());
+                    }
+                }
+            } finally {
+                c.close();
+            }
+        } finally {
+            db.close();
+        }
+        System.err.println("partitions=" + partitions + " undecodable=" + failed + " flags=" + merged.size());
+        for (PhenotypeFlags.Flag f : merged.values()) {
+            System.out.println(f.type + "|" + f.name + "|" + f.value.replace("\n", "\\n"));
+        }
+        return failed == 0;
     }
 
     public static void main(String[] args) {
@@ -39,6 +82,7 @@ public final class RootSql {
             for (String a : args) {
                 if (db == null) {
                     if (a.equals("-header")) header = true;
+                    if (a.equals("-flags")) flagsMode = true;
                     if (a.startsWith("-")) continue; // other sqlite3 options such as -batch are ignored
                     db = a;
                 } else {
@@ -51,7 +95,11 @@ public final class RootSql {
                 System.exit(2);
                 return;
             }
-            exit = run(db, split(sql.toString())) ? 0 : 1;
+            if (flagsMode) {
+                exit = dumpFlags(db, sql.toString().trim()) ? 0 : 1;
+            } else {
+                exit = run(db, split(sql.toString())) ? 0 : 1;
+            }
         } catch (Throwable t) {
             System.err.println("Error: " + t);
             exit = 1;

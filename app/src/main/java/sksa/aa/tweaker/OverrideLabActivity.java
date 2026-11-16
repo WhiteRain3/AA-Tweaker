@@ -38,6 +38,11 @@ public class OverrideLabActivity extends AppCompatActivity {
     private static final String[] TYPES = {"boolean", "long", "double", "string"};
     private static final int KEEP_BACKUPS = 10;
 
+    static final String EXTRA_PACKAGE = "package";
+    static final String EXTRA_NAME = "name";
+    static final String EXTRA_TYPE = "type";
+    static final String EXTRA_VALUE = "value";
+
     private final Handler main = new Handler(Looper.getMainLooper());
     private Spinner packageSpinner;
     private Spinner typeSpinner;
@@ -96,7 +101,24 @@ public class OverrideLabActivity extends AppCompatActivity {
         scroll.addView(form);
         setContentView(scroll);
 
+        prefill();
         run(() -> "");
+    }
+
+    /** Fills the form when opened from the flag browser. */
+    private void prefill() {
+        String name = getIntent().getStringExtra(EXTRA_NAME);
+        if (name == null) return;
+        nameField.setText(name);
+        valueField.setText(getIntent().getStringExtra(EXTRA_VALUE));
+        select(packageSpinner, PACKAGES, getIntent().getStringExtra(EXTRA_PACKAGE));
+        select(typeSpinner, TYPES, getIntent().getStringExtra(EXTRA_TYPE));
+    }
+
+    private static void select(Spinner spinner, String[] items, String wanted) {
+        for (int i = 0; i < items.length; i++) {
+            if (items[i].equals(wanted)) spinner.setSelection(i);
+        }
     }
 
     // ---- actions -------------------------------------------------------------------------

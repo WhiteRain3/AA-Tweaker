@@ -22,8 +22,8 @@ android {
         applicationId 'sksa.aa.tweaker'
         minSdk 23
         targetSdk 34
-        versionCode 37
-        versionName '5.2.2-wr3'
+        versionCode 38
+        versionName '5.2.2-wr4'
         setProperty('archivesBaseName', 'AA-AIO-TWEAKER-' + versionName)
     }
 
