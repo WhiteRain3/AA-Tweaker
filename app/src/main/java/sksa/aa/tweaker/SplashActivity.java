@@ -15,8 +15,6 @@ import android.widget.Button;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 
 import static sksa.aa.tweaker.MainActivity.runSuWithCmd;
@@ -104,47 +102,22 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
-    private void copyFile(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[1024];
-        int read;
-        while((read = in.read(buffer)) != -1){
-            out.write(buffer, 0, read);
-        }
-    }
-
+    /**
+     * Installs the "sqlite3" command the rest of the app calls. It is a small shell wrapper that
+     * runs {@link RootSql} through app_process, using the platform's own SQLite. It is rewritten
+     * on every start because the APK path changes whenever the app is updated.
+     */
     private void copyAssets() {
-        String path = getApplicationInfo().dataDir;
-        boolean sqlite3 = new File(path, "sqlite3").exists();
-
-        if (sqlite3) {
-            return;
+        File wrapper = new File(getApplicationInfo().dataDir, "sqlite3");
+        String script = "#!/system/bin/sh\n"
+                + "export CLASSPATH='" + getApplicationInfo().sourceDir + "'\n"
+                + "exec /system/bin/app_process /system/bin " + RootSql.class.getName() + " \"$@\"\n";
+        try (FileOutputStream out = new FileOutputStream(wrapper)) {
+            out.write(script.getBytes("UTF-8"));
+        } catch (IOException e) {
+            Log.e("sksa.aa.tweaker", "Failed to write sqlite3 wrapper", e);
         }
-
-        File file = new File(path, "sqlite3");
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.v("sksa.aa.tweaker", "\n--  Copy sqlite3 to data directory  --");
-                }
-            });
-            InputStream in;
-            OutputStream out;
-            try {
-                in = this.getResources().openRawResource(R.raw.sqlite3);
-
-                String outDir = getApplicationInfo().dataDir;
-
-                File outFile = new File(outDir, "sqlite3");
-
-                out = new FileOutputStream(outFile);
-                copyFile(in, out);
-                in.close();
-                out.flush();
-                out.close();
-            } catch (IOException e) {
-                Log.e("sksa.aa.tweaker", "Failed to copy asset file: sqlite3", e);
-            }
-            Log.v("sksa.aa.tweaker", runSuWithCmd("chmod 777 " + path + "/sqlite3").getStreamLogsWithLabels());
-
+        wrapper.setExecutable(true, false);
+        wrapper.setReadable(true, false);
     }
 }
