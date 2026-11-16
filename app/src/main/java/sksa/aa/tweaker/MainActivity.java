@@ -17,12 +17,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,8 +40,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jpaste.exceptions.PasteException;
-import org.jpaste.pastebin.Pastebin;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -57,7 +54,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import sksa.aa.tweaker.CarRemoverActivity.CarRemover;
-import sksa.aa.tweaker.Utils.BottomDialog;
 
 @SuppressWarnings("ALL")
 public class MainActivity extends AppCompatActivity {
@@ -160,41 +156,6 @@ public class MainActivity extends AppCompatActivity {
         final String path = getApplicationInfo().dataDir;
         appDirectory = path;
         loadStatus(path);
-
-
-
-        if (extras != null && extras.getString("NewVersionName") != null) {
-
-            BottomDialog bd;
-
-            final BottomDialog builder2 = new BottomDialog.Builder(this)
-                    .setTitle(R.string.new_version_available)
-                    .setContent(getString(R.string.go_to_new_version, extras.getString("NewVersionName")))
-                    .setPositiveBackgroundColor(R.color.colorPrimary)
-                    .setPositiveText(R.string.go_to_download)
-                    .setNegativeText(R.string.ignore_for_now)
-                    .onPositive(new BottomDialog.ButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull BottomDialog dialog) {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/shmykelsa/AA-Tweaker/releases/")));
-                        }
-                    })
-                    .onNegative(new BottomDialog.ButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull BottomDialog dialog) {
-
-                        }
-                    })
-                    .setBackgroundColor(R.color.centercolor).build();
-
-            builder2.show();
-        }
-
-
-
-
-
-
 
 
 
@@ -414,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), getString(R.string.choose_apps_warning), Toast.LENGTH_LONG).show();
                             } else{
                                 temp = true;
-                                final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                                final androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
                                 builder.setTitle(getString(R.string.warning_title));
                                 builder.setMessage(getResources().getString(R.string.warning_patch_apps));
                                 builder.setNeutralButton( getString(android.R.string.ok),
@@ -1568,47 +1529,12 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.copy:
 
-                final String title = "log";
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy);
-                final URL[] string = {null};
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            final ClipboardManager clipboard = (ClipboardManager)
-                                    getSystemService(Context.CLIPBOARD_SERVICE);
-                            TextView textView = findViewById(R.id.logs);
-                            URL newstring = Pastebin.pastePaste(BuildConfig.PASTEBIN_API_KEY, String.valueOf(textView.getText()), title);
-                            Toast.makeText(getApplicationContext(), getString(R.string.copied_pastebin), Toast.LENGTH_LONG).show();
-                            ClipData clip = ClipData.newPlainText("logs", newstring.toString());
-                            clipboard.setPrimaryClip(clip);
-                        } catch (PasteException e) {
-                            e.printStackTrace();
-                            final ClipboardManager clipboard = (ClipboardManager)
-                                    getSystemService(Context.CLIPBOARD_SERVICE);
-                            TextView textView = findViewById(R.id.logs);
-                            Toast.makeText(getApplicationContext(), getString(R.string.log_copied), Toast.LENGTH_LONG).show();
-                            ClipData clip = ClipData.newPlainText("logs", textView.getText());
-                            clipboard.setPrimaryClip(clip);
-                        } catch (RuntimeException e) {
-                            e.printStackTrace();
-                            final ClipboardManager clipboard = (ClipboardManager)
-                                    getSystemService(Context.CLIPBOARD_SERVICE);
-
-                            Toast.makeText(getApplicationContext(), getString(R.string.log_copied), Toast.LENGTH_LONG).show();
-                            Toast.makeText(getApplicationContext(), getString(R.string.log_copied), Toast.LENGTH_LONG).show();
-                            TextView textView = findViewById(R.id.logs);
-
-                            ClipData clip = ClipData.newPlainText("logs", textView.getText());
-                            clipboard.setPrimaryClip(clip);
-                        }
-                    }
-                });
-
-
-
-
+                // Logs never leave the device: copy them to the clipboard only.
+                final ClipboardManager clipboard = (ClipboardManager)
+                        getSystemService(Context.CLIPBOARD_SERVICE);
+                TextView logView = findViewById(R.id.logs);
+                clipboard.setPrimaryClip(ClipData.newPlainText("logs", logView.getText()));
+                Toast.makeText(getApplicationContext(), getString(R.string.log_copied), Toast.LENGTH_LONG).show();
                 break;
 
             case R.id.about:
@@ -1617,7 +1543,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.revert_everything:
-                final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                final androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
                 builder.setMessage(getString(R.string.revert_everything_dialog))
                         .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -1630,7 +1556,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 builder.setCancelable(true);
-                android.support.v7.app.AlertDialog Alert1 = builder.create();
+                androidx.appcompat.app.AlertDialog Alert1 = builder.create();
                 Alert1.show();
                 break;
             case R.id.aa_settings:
