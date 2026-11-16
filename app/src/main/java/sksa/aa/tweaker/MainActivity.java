@@ -4044,13 +4044,29 @@ appendText(logs, "\n\n--  Restoring ownership of the database   --");
             outputStream.writeBytes("exit\n");
             outputStream.flush();
 
+            // Drain stdout and stderr while the command runs. Waiting for exit first deadlocks
+            // as soon as the output is larger than the pipe buffer (about 64 KB).
+            final InputStream stderr = errorStream;
+            final String[] errorText = {""};
+            Thread errorReader = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        errorText[0] = readFully(stderr);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            errorReader.start();
+            streamLogs.setInputStreamLog(readFully(inputStream));
             try {
+                errorReader.join();
                 su.waitFor();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            streamLogs.setInputStreamLog(readFully(inputStream));
-            streamLogs.setErrorStreamLog(readFully(errorStream));
+            streamLogs.setErrorStreamLog(errorText[0]);
         } catch (IOException e) {
             e.printStackTrace();
         }

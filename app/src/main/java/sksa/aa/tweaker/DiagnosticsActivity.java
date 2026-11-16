@@ -137,7 +137,7 @@ public class DiagnosticsActivity extends AppCompatActivity {
     /** Column header, the first rows, and any row that mentions Android Auto. Long cells are cut. */
     private static void sampleRows(StringBuilder sb, String sqlite, String table) {
         StreamLogs logs = MainActivity.runSuWithCmd(sqlite + " -header " + PHENOTYPE_DB
-                + " 'SELECT * FROM " + table + " LIMIT 5000;'");
+                + " 'SELECT * FROM " + table + " LIMIT 2000;'");
         if (!logs.getErrorStreamLog().isEmpty()) {
             sb.append("[stderr] ").append(logs.getErrorStreamLog()).append('\n');
         }
