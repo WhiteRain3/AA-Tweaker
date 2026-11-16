@@ -1541,6 +1541,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, DiagnosticsActivity.class));
                 break;
 
+            case R.id.override_lab:
+                startActivity(new Intent(MainActivity.this, OverrideLabActivity.class));
+                break;
+
             case R.id.about:
                 DialogFragment aboutDialog = new AboutDialog();
                 aboutDialog.show(getSupportFragmentManager(), "AboutDialog");

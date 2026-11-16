@@ -12,6 +12,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/override_lab"
+        android:title="@string/lab_title"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/about"
         android:title="@string/about"
         app:showAsAction="never" />
