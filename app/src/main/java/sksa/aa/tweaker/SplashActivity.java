@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -71,21 +70,17 @@ public class SplashActivity extends AppCompatActivity {
 
 
 
-        final Button continueButton = findViewById(R.id.proceed_button);
-        continueButton.setEnabled(false);
-        Log.v("sksa.aa.tweaker", "Engaging countdown");
-        new CountDownTimer(5000, 10) {
-            public void onTick(long millisUntilFinished) {
-                int secondsRemaining = (int) ( 1 + (millisUntilFinished/1000));
-                continueButton.setText(getString(R.string.proceed) + " (" + secondsRemaining + ")");
-            }
+        // With root there is nothing to wait for: go straight to the main screen.
+        if (isDeviceRooted.getInputStreamLog().equals("1")) {
+            startActivity(intent);
+            finish();
+            return;
+        }
 
-            @Override
-            public void onFinish() {
-                continueButton.setEnabled(true);
-                continueButton.setText(R.string.proceed);
-            }
-        }.start();
+        // No root: stay here so the user can retry or read why the app cannot work.
+        final Button continueButton = findViewById(R.id.proceed_button);
+        continueButton.setText(R.string.proceed);
+        noRootDialog.show(getSupportFragmentManager(), "NoRootDialog");
 
         continueButton.setOnClickListener(
                 new View.OnClickListener() {
