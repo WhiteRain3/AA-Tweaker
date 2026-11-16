@@ -1537,6 +1537,10 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), getString(R.string.log_copied), Toast.LENGTH_LONG).show();
                 break;
 
+            case R.id.diagnostics:
+                startActivity(new Intent(MainActivity.this, DiagnosticsActivity.class));
+                break;
+
             case R.id.about:
                 DialogFragment aboutDialog = new AboutDialog();
                 aboutDialog.show(getSupportFragmentManager(), "AboutDialog");

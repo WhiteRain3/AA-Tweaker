@@ -154,4 +154,7 @@ WARNING: This tweak has not been extensively tested and could potentially break 
     <string name="tutorial_inertial_scroll">This tweak will override the default scrolling behaviour of Android Auto making so that it doesn\'t stop page by page.</string>
     <string name="vertical_bar_tweak">Vertical Bar</string>
     <string name="tutorial_vertical_bar_tweak">This tweak will force the bar to be vertical. This tweak will only work on Coolwalk UI.</string>
+    <string name="diagnostics_title">Diagnostics (read-only)</string>
+    <string name="diagnostics_copy">Copy report</string>
+    <string name="diagnostics_running">Collecting information…</string>
 </resources>
