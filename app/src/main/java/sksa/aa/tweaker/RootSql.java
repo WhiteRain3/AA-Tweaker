@@ -23,6 +23,11 @@ import java.util.Locale;
  */
 public final class RootSql {
 
+    private static final int MAX_BLOB_BYTES = 48;
+
+    /** -header: print column names before the rows of each query, like sqlite3 -header. */
+    private static boolean header;
+
     private RootSql() {
     }
 
@@ -33,7 +38,8 @@ public final class RootSql {
             StringBuilder sql = new StringBuilder();
             for (String a : args) {
                 if (db == null) {
-                    if (a.startsWith("-")) continue; // sqlite3 options such as -batch are ignored
+                    if (a.equals("-header")) header = true;
+                    if (a.startsWith("-")) continue; // other sqlite3 options such as -batch are ignored
                     db = a;
                 } else {
                     if (sql.length() > 0) sql.append(' ');
@@ -133,6 +139,13 @@ public final class RootSql {
         try {
             int n = c.getColumnCount();
             StringBuilder line = new StringBuilder();
+            if (header) {
+                for (int i = 0; i < n; i++) {
+                    if (i > 0) line.append('|');
+                    line.append(c.getColumnName(i));
+                }
+                System.out.println(line);
+            }
             while (c.moveToNext()) {
                 line.setLength(0);
                 for (int i = 0; i < n; i++) {
@@ -141,7 +154,7 @@ public final class RootSql {
                         case Cursor.FIELD_TYPE_NULL:
                             break;
                         case Cursor.FIELD_TYPE_BLOB:
-                            line.append(new String(c.getBlob(i)));
+                            appendBlob(line, c.getBlob(i));
                             break;
                         default:
                             line.append(c.getString(i));
@@ -152,6 +165,16 @@ public final class RootSql {
         } finally {
             c.close();
         }
+    }
+
+    /** Blobs are shown as a hex literal, shortened, so binary data cannot garble the output. */
+    private static void appendBlob(StringBuilder line, byte[] blob) {
+        line.append("x'");
+        for (int i = 0; i < blob.length && i < MAX_BLOB_BYTES; i++) {
+            line.append(String.format(Locale.ROOT, "%02x", blob[i] & 0xff));
+        }
+        line.append('\'');
+        if (blob.length > MAX_BLOB_BYTES) line.append("(+").append(blob.length - MAX_BLOB_BYTES).append(" bytes)");
     }
 
     static boolean isQuery(String statement) {

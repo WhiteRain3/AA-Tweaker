@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Read-only report of everything the tweaks depend on: app versions, root, SELinux, and the
@@ -31,6 +32,13 @@ public class DiagnosticsActivity extends AppCompatActivity {
     static final String GEARHEAD = "com.google.android.projection.gearhead";
     static final String GMS = "com.google.android.gms";
     static final String PHENOTYPE_DB = "/data/data/com.google.android.gms/databases/phenotype.db";
+
+    /** Tables whose rows are never printed: they can hold account names or tokens. */
+    private static final List<String> PRIVATE_TABLES =
+            Arrays.asList("accounts", "dogfood_token", "cross_logged_tokens", "last_fetch");
+    private static final int FIRST_ROWS = 3;
+    private static final int MATCHING_ROWS = 25;
+    private static final int MAX_CELL = 400;
 
     private TextView report;
 
@@ -99,32 +107,56 @@ public class DiagnosticsActivity extends AppCompatActivity {
         section(sb, "phenotype.db files");
         shell(sb, "ls -la /data/data/com.google.android.gms/databases/ | grep -i phenotype");
 
-        section(sb, "Tables");
-        sql(sb, sqlite, "SELECT name FROM sqlite_master WHERE type=\"table\" ORDER BY name;");
+        section(sb, "Schema (tables, triggers, indexes)");
+        sql(sb, sqlite, "SELECT type, name, sql FROM sqlite_master WHERE type IN (\"table\", \"trigger\", \"index\") ORDER BY type, name;");
 
-        section(sb, "FlagOverrides definition");
-        sql(sb, sqlite, "SELECT sql FROM sqlite_master WHERE name=\"FlagOverrides\";");
+        String tables = MainActivity.runSuWithCmd(sqlite + " " + PHENOTYPE_DB
+                + " 'SELECT name FROM sqlite_master WHERE type=\"table\" ORDER BY name;'").getInputStreamLog();
+        for (String table : tables.split("\n")) {
+            table = table.trim();
+            if (!table.matches("[A-Za-z0-9_]+")) continue;
+            section(sb, "Table " + table);
+            sql(sb, sqlite, "SELECT COUNT(*) FROM " + table + ";");
+            if (PRIVATE_TABLES.contains(table)) {
+                sb.append("(rows not shown: may contain account names or tokens)\n");
+                continue;
+            }
+            sampleRows(sb, sqlite, table);
+        }
 
-        section(sb, "Triggers (tweaks installed by this app or upstream)");
-        sql(sb, sqlite, "SELECT name, tbl_name FROM sqlite_master WHERE type=\"trigger\";");
-
-        section(sb, "FlagOverrides rows per package");
-        sql(sb, sqlite, "SELECT packageName, COUNT(*) FROM FlagOverrides GROUP BY packageName;");
-
-        section(sb, "Android Auto overrides (name | bool | int | float | string)");
-        sql(sb, sqlite, "SELECT name, boolVal, intVal, floatVal, stringVal FROM FlagOverrides "
-                + "WHERE packageName IN (\"" + GEARHEAD + "\", \"com.google.android.gms.car\") "
-                + "ORDER BY name LIMIT 300;");
-
-        section(sb, "Server-delivered flags stored in phenotype.db (Flags table)");
-        sql(sb, sqlite, "SELECT packageName, COUNT(*) FROM Flags WHERE packageName LIKE \"%gearhead%\" "
-                + "OR packageName LIKE \"%gms.car%\" GROUP BY packageName;");
-
-        section(sb, "Android Auto's own phenotype files");
-        shell(sb, "ls -laR /data/data/" + GEARHEAD + "/files/phenotype 2>&1 | head -n 40");
+        section(sb, "Phenotype files on disk mentioning Android Auto");
+        shell(sb, "find /data/data/" + GEARHEAD + " /data/user_de/0/" + GEARHEAD
+                + " -maxdepth 5 \\( -iname \"*phenotype*\" -o -iname \"*.pb\" \\) 2>/dev/null | head -n 40");
+        shell(sb, "ls -la /data/data/" + GMS + "/files/phenotype 2>&1 | head -n 20");
+        shell(sb, "find /data/data/" + GMS + "/files -maxdepth 5 \\( -iname \"*gearhead*\" -o -iname \"*gms.car*\" \\) 2>/dev/null | head -n 40");
 
         sb.append("\n-- end of report. Nothing was modified. --\n");
         return sb.toString();
+    }
+
+    /** Column header, the first rows, and any row that mentions Android Auto. Long cells are cut. */
+    private static void sampleRows(StringBuilder sb, String sqlite, String table) {
+        StreamLogs logs = MainActivity.runSuWithCmd(sqlite + " -header " + PHENOTYPE_DB
+                + " 'SELECT * FROM " + table + " LIMIT 5000;'");
+        if (!logs.getErrorStreamLog().isEmpty()) {
+            sb.append("[stderr] ").append(logs.getErrorStreamLog()).append('\n');
+        }
+        String[] lines = logs.getInputStreamLog().split("\n");
+        int shown = 0;
+        int matches = 0;
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            if (line.isEmpty()) continue;
+            boolean relevant = line.contains("gearhead") || line.contains("gms.car");
+            if (i <= FIRST_ROWS || (relevant && matches < MATCHING_ROWS)) {
+                if (relevant && i > FIRST_ROWS) matches++;
+                sb.append(line.length() > MAX_CELL ? line.substring(0, MAX_CELL) + "…" : line).append('\n');
+                shown++;
+            }
+        }
+        if (shown < lines.length) {
+            sb.append("(").append(lines.length - shown).append(" more rows not shown)\n");
+        }
     }
 
     private String version(String pkg) {
