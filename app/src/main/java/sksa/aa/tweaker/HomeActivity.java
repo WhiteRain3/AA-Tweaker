@@ -36,6 +36,7 @@ public class HomeActivity extends AppCompatActivity {
         findViewById(R.id.btn_start_server).setOnClickListener(v -> run(() -> AndroidAuto.startHeadUnitServer(this)));
         findViewById(R.id.btn_stop_server).setOnClickListener(v -> run(() -> AndroidAuto.stopHeadUnitServer(this)));
         findViewById(R.id.btn_flags).setOnClickListener(v -> startActivity(new Intent(this, FlagsActivity.class)));
+        findViewById(R.id.btn_direct).setOnClickListener(v -> startActivity(new Intent(this, DirectActivity.class)));
         findViewById(R.id.btn_open_aax).setOnClickListener(v -> {
             if (!AndroidAuto.open(this, AndroidAuto.EXPERIMENTS)) {
                 Toast.makeText(this, R.string.home_aax_missing, Toast.LENGTH_LONG).show();

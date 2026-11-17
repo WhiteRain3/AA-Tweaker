@@ -36,6 +36,23 @@
     <string name="flags_save">Save</string>
     <string name="flags_name_copied">Flag name copied</string>
 
+    <string name="direct_title">Direct write (experimental)</string>
+    <string name="direct_intro">Writes one Android Auto flag override straight into Play Services\' database, without AA Experiments. This follows an untested proposal for the new database layout, so it may have no effect. Every change is confirmed and backed up first, and only Android Auto\'s rows are touched.\n\nIf the same flag is also overridden in AA Experiments, that one wins.</string>
+    <string name="direct_package">Flag set</string>
+    <string name="direct_flag">Flag name</string>
+    <string name="direct_type">Type</string>
+    <string name="direct_value">Value</string>
+    <string name="direct_write">Back up and write</string>
+    <string name="direct_remove">Remove this override</string>
+    <string name="direct_remove_all">Remove all Android Auto overrides</string>
+    <string name="direct_confirm">Confirm change</string>
+    <string name="direct_not_set">(not set)</string>
+    <string name="direct_confirm_write">%1$s\n\n%2$s  →  %3$s\n\nType: %4$s\nFlag set: %5$s\n\nA backup is saved first.</string>
+    <string name="direct_unknown_flag">This name is not in the flag reference. A misspelt flag does nothing.</string>
+    <string name="direct_confirm_remove">Remove the direct override for\n%1$s?\n\nA backup is saved first.</string>
+    <string name="direct_confirm_remove_all">This removes these overrides. A backup is saved first.\n</string>
+    <string name="direct_unsupported">This Play Services version does not have the flag_overrides table, so direct writing is not available.</string>
+
     <string name="diagnostics_title">Diagnostics (read-only)</string>
     <string name="diagnostics_copy">Copy report</string>
     <string name="diagnostics_running">Collecting information…</string>

@@ -157,6 +157,13 @@
                         android:text="@string/flags_title" />
 
                     <Button
+                        android:id="@+id/btn_direct"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/direct_title" />
+
+                    <Button
                         android:id="@+id/btn_open_aax"
                         style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="match_parent"

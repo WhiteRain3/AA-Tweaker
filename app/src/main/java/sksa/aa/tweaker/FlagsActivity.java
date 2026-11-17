@@ -333,6 +333,12 @@ public class FlagsActivity extends AppCompatActivity {
             h.badges.setText(badges);
             h.badges.setVisibility(badges.isEmpty() ? View.GONE : View.VISIBLE);
             h.itemView.setOnClickListener(v -> showDetail(f));
+            // Long-press: open the experimental direct-write screen for this flag.
+            h.itemView.setOnLongClickListener(v -> {
+                startActivity(new android.content.Intent(FlagsActivity.this, DirectActivity.class)
+                        .putExtra(DirectActivity.EXTRA_NAME, f.name));
+                return true;
+            });
         }
 
         @Override
