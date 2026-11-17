@@ -2,74 +2,62 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+    <!-- Needed to see Android Auto, Play Services and AA Experiments. The app has no network permission. -->
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:screenOrientation="portrait"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".SplashActivity"
+        android:theme="@style/Theme.AATweaker">
+
+        <activity
+            android:name=".HomeActivity"
             android:exported="true">
             <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:exported="false"
-            android:launchMode="singleTop">
-        </activity> <!-- A child of the main activity -->
-        <activity
-            android:name=".AppsList"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/app_list_label"
-            android:parentActivityName=".MainActivity" />
 
         <activity
-            android:name=".AccountsChooseActivity.AccountsChooser"
-            android:configChanges="orientation|keyboardHidden" />
-
-        <activity
-            android:name=".CarRemoverActivity.CarRemover"
-            android:configChanges="orientation|keyboardHidden" />
+            android:name=".FlagsActivity"
+            android:parentActivityName=".HomeActivity"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".DiagnosticsActivity"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/Theme.AATweaker.ActionBar" />
 
         <activity
-            android:name=".OverrideLabActivity"
-            android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+            android:name=".relay.RelayActivity"
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/Theme.AATweaker.ActionBar" />
 
-        <activity
-            android:name=".FlagBrowserActivity"
-            android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+        <!-- Quick Settings tile: restart Android Auto and the head unit server in one tap. -->
+        <service
+            android:name=".RestartTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_restart"
+            android:label="@string/tile_restart"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
 
         <!-- Message relay: mirrors Messenger notifications in a form Android Auto accepts. -->
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
-
-        <activity
-            android:name=".relay.RelayActivity"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
 
         <service
             android:name=".relay.RelayService"

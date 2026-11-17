@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.AATweaker" parent="Theme.Material3.DayNight.NoActionBar" />
+    <!-- For the simple tool screens that still use the built-in action bar. -->
+    <style name="Theme.AATweaker.ActionBar" parent="Theme.Material3.DayNight" />
+</resources>

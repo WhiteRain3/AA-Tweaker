@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class DiagnosticsActivity extends AppCompatActivity {
 
-    static final String GEARHEAD = "com.google.android.projection.gearhead";
+    static final String GEARHEAD = AndroidAuto.PACKAGE;
     static final String GMS = "com.google.android.gms";
     static final String PHENOTYPE_DB = "/data/data/com.google.android.gms/databases/phenotype.db";
 
@@ -86,7 +86,7 @@ public class DiagnosticsActivity extends AppCompatActivity {
 
     private String buildReport() {
         StringBuilder sb = new StringBuilder();
-        String sqlite = getApplicationInfo().dataDir + "/sqlite3";
+        String sqlite = Root.sqlite(this);
 
         section(sb, "Versions");
         sb.append("Android Auto : ").append(version(GEARHEAD)).append('\n');
@@ -110,7 +110,7 @@ public class DiagnosticsActivity extends AppCompatActivity {
         section(sb, "Schema (tables, triggers, indexes)");
         sql(sb, sqlite, "SELECT type, name, sql FROM sqlite_master WHERE type IN (\"table\", \"trigger\", \"index\") ORDER BY type, name;");
 
-        String tables = MainActivity.runSuWithCmd(sqlite + " " + PHENOTYPE_DB
+        String tables = Root.run(sqlite + " " + PHENOTYPE_DB
                 + " 'SELECT name FROM sqlite_master WHERE type=\"table\" ORDER BY name;'").getInputStreamLog();
         for (String table : tables.split("\n")) {
             table = table.trim();
@@ -136,7 +136,7 @@ public class DiagnosticsActivity extends AppCompatActivity {
 
     /** Column header, the first rows, and any row that mentions Android Auto. Long cells are cut. */
     private static void sampleRows(StringBuilder sb, String sqlite, String table) {
-        StreamLogs logs = MainActivity.runSuWithCmd(sqlite + " -header " + PHENOTYPE_DB
+        StreamLogs logs = Root.run(sqlite + " -header " + PHENOTYPE_DB
                 + " 'SELECT * FROM " + table + " LIMIT 2000;'");
         if (!logs.getErrorStreamLog().isEmpty()) {
             sb.append("[stderr] ").append(logs.getErrorStreamLog()).append('\n');
@@ -177,7 +177,7 @@ public class DiagnosticsActivity extends AppCompatActivity {
     }
 
     private static void shell(StringBuilder sb, String cmd) {
-        StreamLogs logs = MainActivity.runSuWithCmd(cmd);
+        StreamLogs logs = Root.run(cmd);
         String out = logs.getInputStreamLog();
         String err = logs.getErrorStreamLog();
         if (!out.isEmpty()) sb.append(out).append('\n');
