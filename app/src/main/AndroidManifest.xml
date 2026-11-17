@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
@@ -58,6 +60,30 @@
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+
+        <!-- Message relay: mirrors Messenger notifications in a form Android Auto accepts. -->
+        <meta-data
+            android:name="com.google.android.gms.car.application"
+            android:resource="@xml/automotive_app_desc" />
+
+        <activity
+            android:name=".relay.RelayActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+
+        <service
+            android:name=".relay.RelayService"
+            android:exported="true"
+            android:label="@string/relay_title"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".relay.RelayReceiver"
+            android:exported="false" />
 
     </application>
 

@@ -12,6 +12,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/message_relay"
+        android:title="@string/relay_title"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/flag_browser"
         android:title="@string/browser_title"
         app:showAsAction="never" />

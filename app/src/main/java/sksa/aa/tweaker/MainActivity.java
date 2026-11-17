@@ -1541,6 +1541,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, DiagnosticsActivity.class));
                 break;
 
+            case R.id.message_relay:
+                startActivity(new Intent(MainActivity.this, sksa.aa.tweaker.relay.RelayActivity.class));
+                break;
+
             case R.id.flag_browser:
                 startActivity(new Intent(MainActivity.this, FlagBrowserActivity.class));
                 break;

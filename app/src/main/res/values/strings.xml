@@ -176,4 +176,20 @@ WARNING: This tweak has not been extensively tested and could potentially break 
     <string name="browser_copied">Copied %1$d flags</string>
     <string name="browser_count">Showing %1$d of %2$d flags</string>
     <string name="browser_empty">No flags could be read for this flag set.</string>
+    <string name="relay_title">Messenger relay</string>
+    <string name="relay_intro">Android Auto ignores Messenger\'s notifications because they have no \"mark as read\" action. This relay re-posts them in a form Android Auto accepts and sends your replies back through Messenger. Nothing leaves the phone.</string>
+    <string name="relay_status">Notification access: %1$s\nAllowed to post notifications: %2$s</string>
+    <string name="relay_yes">yes</string>
+    <string name="relay_no">NO</string>
+    <string name="relay_enabled">Relay Messenger messages</string>
+    <string name="relay_only_in_car">Only while Android Auto is connected</string>
+    <string name="relay_grant_access">Grant notification access</string>
+    <string name="relay_grant_post">Allow posting notifications</string>
+    <string name="relay_test">Post a test message</string>
+    <string name="relay_test_sender">Test sender</string>
+    <string name="relay_test_text">This is a test message from the relay.</string>
+    <string name="relay_channel">Relayed messages</string>
+    <string name="relay_me">Me</string>
+    <string name="relay_reply">Reply</string>
+    <string name="relay_mark_read">Mark as read</string>
 </resources>
