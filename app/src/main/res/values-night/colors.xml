@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="bottomcolor">#1E1E1E</color>
-    <color name="centercolor">#2C2C2C</color>
-    <color name="topcolor">#3C3C3C</color>
-    <color name="dialog_text_color">#ffffffff</color>
-    <color name="menu_text_color">@android:color/background_light</color>
-    <color name="menu_background">@android:color/background_dark</color>
-</resources>
