@@ -1,0 +1,793 @@
+{
+ "note": "Plain-English notes on Android Auto flags. Flag names, types and defaults are facts read from Android Auto and from the AA Experiments feature catalog; the wording here is this project's own. \"verified\" entries were checked on the stated version only.",
+ "flags": [
+  {
+   "name": "SystemUi__horizontal_rail_canonical_breakpoint_dp",
+   "category": "layout",
+   "title": "Rail position",
+   "description": "Cutoff that decides whether the app rail sits along the bottom of the screen or down the side.",
+   "risk": "safe",
+   "suggest": "40 or 2000 (default 450); which way each pushes the rail depends on the screen",
+   "verified": "Moves the rail on Android Auto 18.0.664264 (checked in DHU)."
+  },
+  {
+   "name": "SystemUi__widescreen_breakpoint_dp",
+   "category": "layout",
+   "title": "Widescreen width cutoff",
+   "description": "Minimum screen width for the widescreen layout (map with a side panel). Lower it to get widescreen on a narrower screen. The aspect-ratio cutoff has to allow it too.",
+   "risk": "may_break",
+   "suggest": "700 (default 1240)"
+  },
+  {
+   "name": "SystemUi__widescreen_aspect_ratio_breakpoint",
+   "category": "layout",
+   "title": "Widescreen aspect-ratio cutoff",
+   "description": "How wide the screen must be compared with its height to count as widescreen. An 800x480 screen is 1.667, just under the default.",
+   "risk": "may_break",
+   "suggest": "1.6 (default 1.67)"
+  },
+  {
+   "name": "SystemUi__widescreen_aspect_ratio_breakpoint_for_portrait",
+   "category": "layout",
+   "title": "Widescreen aspect ratio, portrait path",
+   "description": "Same cutoff as above, used on the portrait layout path. Only relevant on tall screens.",
+   "risk": "experimental"
+  },
+  {
+   "name": "SystemUi__semi_widescreen_breakpoint_dp",
+   "category": "layout",
+   "title": "Semi-widescreen width cutoff",
+   "description": "Minimum width for the in-between \"semi-widescreen\" layout.",
+   "risk": "may_break",
+   "suggest": "700 (default 880)"
+  },
+  {
+   "name": "SystemUi__portrait_breakpoint_dp",
+   "category": "layout",
+   "title": "Portrait layout cutoff",
+   "description": "Cutoff for choosing the portrait layout. Only matters on tall screens.",
+   "risk": "may_break"
+  },
+  {
+   "name": "SystemUi__short_portrait_breakpoint_dp",
+   "category": "layout",
+   "title": "Short-portrait cutoff",
+   "description": "Cutoff for the short portrait layout. Only matters on tall screens.",
+   "risk": "may_break"
+  },
+  {
+   "name": "SystemUi__narrow_portrait_width_threshold_dp",
+   "category": "layout",
+   "title": "Narrow-portrait width",
+   "description": "Width below which a tall screen is treated as narrow portrait.",
+   "risk": "may_break"
+  },
+  {
+   "name": "SystemUi__full_maps_and_dashboard_width_threshold_dp",
+   "category": "layout",
+   "title": "Map + dashboard width",
+   "description": "Width needed to show a full map together with the dashboard. Raising it above your screen width should switch that combined view off.",
+   "risk": "may_break",
+   "suggest": "900 to disable on an 800-wide screen (default 710)"
+  },
+  {
+   "name": "SystemUi__wide_dashboard_min_map_height_dp",
+   "category": "layout",
+   "title": "Wide dashboard map height",
+   "description": "Minimum map height before the wide dashboard is allowed.",
+   "risk": "may_break",
+   "suggest": "300 (default 400)"
+  },
+  {
+   "name": "SystemUi__vertical_rail_widget_enabled",
+   "category": "layout",
+   "title": "Rail widget",
+   "description": "Shows a small media or navigation card on the rail in more layouts, so the other app stays visible.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "SystemUi__vertical_rail_widget_enabled_all",
+   "category": "layout",
+   "title": "Rail widget, forced",
+   "description": "Stronger version of the rail widget switch. Try it only if the normal one does nothing.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "SystemUi__use_compose_rail",
+   "category": "layout",
+   "title": "Newer rail implementation",
+   "description": "Replaces the rail with its newer internal implementation. It may look identical or be less stable.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "SystemUi__edge_to_edge_maps_enabled",
+   "category": "layout",
+   "title": "Edge-to-edge maps",
+   "description": "Draws maps and eligible apps right to the screen edges.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "SystemUi__rhd_flip_enable",
+   "category": "layout",
+   "title": "Right-hand-drive layout",
+   "description": "The name suggests it mirrors the layout for right-hand-drive cars. What it actually changes is not confirmed.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "SystemUi__inertial_scrolling_enabled",
+   "category": "layout",
+   "title": "Smooth scrolling",
+   "description": "Lets lists scroll freely instead of jumping a page at a time.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "CarAppLibrary__tab_layout_orientation",
+   "category": "layout",
+   "title": "Tab direction inside apps",
+   "description": "Direction of tabs in apps built on the car app library: 0 horizontal, 1 vertical, 2 automatic.",
+   "risk": "safe",
+   "suggest": "1 or 2 (default 0)"
+  },
+  {
+   "name": "CieloFeature__cielo_status",
+   "category": "layout",
+   "title": "New interface (Cielo)",
+   "description": "Switches Android Auto to the redesigned interface Google is preparing, codenamed Cielo, following the phone's light/dark theme. It is unfinished, so expect missing screens. Only known value: system_theme.",
+   "risk": "experimental",
+   "suggest": "system_theme",
+   "verified": "On Android Auto 18.0.664264 this enables the new interface; the navigation app fills the screen."
+  },
+  {
+   "name": "CieloFeature__cielo_rail_nav_model",
+   "category": "layout",
+   "title": "Cielo rail model",
+   "description": "Selects a different rail navigation model in the new interface. What each number means is not known.",
+   "risk": "experimental",
+   "suggest": "1 or 2 (default 0)"
+  },
+  {
+   "name": "CieloFeature__use_draggable_dashboard",
+   "category": "layout",
+   "title": "Rearrangeable dashboard",
+   "description": "The name suggests a dashboard you can rearrange in the new interface. Not confirmed.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "CieloFeature__earth_enabled",
+   "category": "layout",
+   "title": "Widget dashboard (Earth)",
+   "description": "Main switch for the widget dashboard in the new interface. Reported to need a newer Android version (API 37) and head-unit support, so it may do nothing or crash.",
+   "risk": "experimental"
+  },
+  {
+   "name": "CieloFeature__earth_status",
+   "category": "layout",
+   "title": "Widget dashboard mode",
+   "description": "Selects the widget dashboard path. Only known value: CAR.SYS. Same requirements as the main switch.",
+   "risk": "experimental"
+  },
+  {
+   "name": "CieloFeature__earth_dashboard_widget_combo_enabled",
+   "category": "layout",
+   "title": "Dashboard + widgets",
+   "description": "Dashboard and widgets shown together. Depends on the widget dashboard being active.",
+   "risk": "experimental"
+  },
+  {
+   "name": "CieloFeature__earth_mini_dashboard_card_enabled",
+   "category": "layout",
+   "title": "Mini dashboard card",
+   "description": "A small dashboard card in the widget dashboard. Depends on the combined dashboard + widgets view.",
+   "risk": "experimental"
+  },
+  {
+   "name": "CieloFeature__earth_tilt",
+   "category": "layout",
+   "title": "Maximum widgets",
+   "description": "Despite the name, the maximum number of widgets that can be added to the widget dashboard.",
+   "risk": "experimental"
+  },
+  {
+   "name": "Coolwalk__use_light_dark_theme",
+   "category": "look",
+   "title": "Light/dark theme",
+   "description": "Light and dark theme handling for the main interface. New in 18.0; the visible effect is not guaranteed.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "Coolwalk__neutralized_theme_kill_switch",
+   "category": "look",
+   "title": "Wallpaper-derived colours",
+   "description": "true keeps the fixed colour palette; false lets colours be derived from the wallpaper.",
+   "risk": "safe",
+   "suggest": "false"
+  },
+  {
+   "name": "Coolwalk__palette_base_color",
+   "category": "look",
+   "title": "Accent colour",
+   "description": "Base colour the interface palette is built from, as a hex colour.",
+   "risk": "safe",
+   "suggest": "#4285F4 or any hex colour"
+  },
+  {
+   "name": "IndependentNightModeFeature__enabled",
+   "category": "look",
+   "title": "Independent night mode",
+   "description": "Day/night mode for the car screen that does not follow the phone.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "SystemUi__twin_smarts_mode",
+   "category": "look",
+   "title": "Animated notification cards",
+   "description": "Animated shader effect on notification cards. Only the exact value 13007 switches it on.",
+   "risk": "safe",
+   "suggest": "13007 (default 0)"
+  },
+  {
+   "name": "Assistant__icon_experiment_variant",
+   "category": "look",
+   "title": "Assistant button icon",
+   "description": "Icon on the assistant button: 0 classic microphone, 1 Gemini microphone, 2 Gemini spark, 3 Gemini 2026 logo.",
+   "risk": "safe",
+   "suggest": "2"
+  },
+  {
+   "name": "Coolwalk__nav_app_border_width",
+   "category": "look",
+   "title": "Navigation window border",
+   "description": "Width of a border drawn around the navigation window.",
+   "risk": "safe",
+   "suggest": "2 (default 0)"
+  },
+  {
+   "name": "SystemUi__wallpaper_backdrop_enabled",
+   "category": "look",
+   "title": "Wallpaper behind the interface",
+   "description": "Draws the wallpaper behind the interface.",
+   "risk": "safe"
+  },
+  {
+   "name": "PhoneThemeFeature__enable_dynamic_font_family",
+   "category": "look",
+   "title": "Phone-maker font",
+   "description": "Uses the phone manufacturer's font in the car interface where one is defined.",
+   "risk": "safe"
+  },
+  {
+   "name": "SystemUi__status_bar_theme_overlay_kill_switch",
+   "category": "look",
+   "title": "Status bar theme overlay",
+   "description": "true applies the light/dark overlay to the status area of the rail; false uses the plain version.",
+   "risk": "experimental"
+  },
+  {
+   "name": "ApolloFeature__expressive_enabled",
+   "category": "media",
+   "title": "Expressive media player",
+   "description": "The \"expressive\" media design, including the wavy progress bar. Force it to false for the plain bar. Other parts of the player look may change with it.",
+   "risk": "safe",
+   "suggest": "false to remove the wavy bar",
+   "verified": "false removes the wavy progress bar on Android Auto 18.0.664264."
+  },
+  {
+   "name": "HeroFeature__use_new_media_ui",
+   "category": "media",
+   "title": "New media player",
+   "description": "Main switch for the new media player. Forcing false brings back the previous player as a whole.",
+   "risk": "may_break"
+  },
+  {
+   "name": "SystemUi__project_accordion_enable",
+   "category": "media",
+   "title": "Compact media layout",
+   "description": "A more compact, responsive media layout intended for smaller screens.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "Media__update_playback_background",
+   "category": "media",
+   "title": "Album-art colours",
+   "description": "Player background and colours change with the album art.",
+   "risk": "safe"
+  },
+  {
+   "name": "Media__force_skip_10s_media_actions_enabled",
+   "category": "media",
+   "title": "±10 second buttons",
+   "description": "Adds skip back/forward 10 seconds buttons when the app supports seeking.",
+   "risk": "safe"
+  },
+  {
+   "name": "Media__support_multiple_dashboard_media_cards",
+   "category": "media",
+   "title": "Several media cards",
+   "description": "Allows more than one media card on the dashboard.",
+   "risk": "safe"
+  },
+  {
+   "name": "Media__show_album_art_for_suggestion",
+   "category": "media",
+   "title": "Album art on suggestions",
+   "description": "Shows album art on media suggestions.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "Media__query_media_app_directly_for_suggestions_enabled",
+   "category": "media",
+   "title": "Suggestions from the app",
+   "description": "Asks the media app itself for suggestions.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "Media__display_disable_autoplay_notification_enabled",
+   "category": "media",
+   "title": "Autoplay hint popup",
+   "description": "The popup that suggests turning autoplay off after you pause several times.",
+   "risk": "safe",
+   "suggest": "false to stop it"
+  },
+  {
+   "name": "CarAppLibrary__miniplayer_overlay_enabled",
+   "category": "media",
+   "title": "Mini-player overlay",
+   "description": "An expandable mini-player shown inside other apps.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "CarAppLibrary__enable_progress_buttons_on_dashboard_mode",
+   "category": "media",
+   "title": "Progress on dashboard buttons",
+   "description": "Dashboard action buttons that show real progress.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "HeroFeature__force_hero_layout",
+   "category": "media",
+   "title": "Force large media layout",
+   "description": "Forces the large media layout. Reported to scale badly and crash on low-resolution screens.",
+   "risk": "may_break"
+  },
+  {
+   "name": "SystemUi__media_hun_timeout_ms",
+   "category": "media",
+   "title": "Now-playing popup time",
+   "description": "How long the \"now playing\" popup stays on screen, in milliseconds.",
+   "risk": "safe",
+   "suggest": "default 4000"
+  },
+  {
+   "name": "Assistant__asr_1_75_leave_media_on_during_voice_session",
+   "category": "media",
+   "title": "Music during voice",
+   "description": "Keeps media playing while you talk to the assistant, on one of the voice paths.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "SystemUi__display_bell_when_status_elements_hidden",
+   "category": "notifications",
+   "title": "Keep notification bell",
+   "description": "Keeps the notification-centre bell visible when other status icons are hidden.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "SystemUi__quick_settings_enabled",
+   "category": "notifications",
+   "title": "Quick settings",
+   "description": "Adds theme, battery saver, do-not-disturb and settings shortcuts to the notification centre. You need the bell visible to reach it.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "Coolwalk__dashboard_show_3p_notifications_with_actions_enabled",
+   "category": "notifications",
+   "title": "App notifications with buttons",
+   "description": "Allows third-party notifications with action buttons on the dashboard.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "SystemUi__hun_default_heads_up_timeout_ms",
+   "category": "notifications",
+   "title": "Popup time",
+   "description": "How long a notification popup stays on screen, in milliseconds.",
+   "risk": "safe",
+   "suggest": "4000-15000 (default 8000)"
+  },
+  {
+   "name": "SystemUi__media_hun_in_rail_widget_timeout_ms",
+   "category": "notifications",
+   "title": "Rail popup time",
+   "description": "How long a media notification stays in the rail widget, in milliseconds.",
+   "risk": "safe",
+   "suggest": "default 8000"
+  },
+  {
+   "name": "SystemUi__dnd_suppress_notifications_enabled",
+   "category": "notifications",
+   "title": "Follow Do Not Disturb",
+   "description": "When the phone is in Do Not Disturb, popups and their sounds are suppressed in the car.",
+   "risk": "safe"
+  },
+  {
+   "name": "SystemUi__stack_hun_buttons_if_actions_contain_text_enabled",
+   "category": "notifications",
+   "title": "Stacked popup buttons",
+   "description": "Stacks popup buttons vertically when they have text labels.",
+   "risk": "safe"
+  },
+  {
+   "name": "Dialer__enable_third_action_on_call_huns",
+   "category": "notifications",
+   "title": "Third button on call popup",
+   "description": "Allows a third button on incoming-call popups.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "HeadUnitFeature__show_update_notifications_enabled",
+   "category": "notifications",
+   "title": "Head-unit update notices",
+   "description": "Notices about known software updates for the car's head unit.",
+   "risk": "safe",
+   "suggest": "false to stop them"
+  },
+  {
+   "name": "Messaging__display_hun_only_for_notification_importance_above_default",
+   "category": "messaging",
+   "title": "Popups only for important messages",
+   "description": "When true, only notifications set to pop up on the phone get a popup in the car. Forcing false should let more through.",
+   "risk": "safe",
+   "suggest": "false"
+  },
+  {
+   "name": "Messaging__autoplay_messages_kill_switch",
+   "category": "messaging",
+   "title": "Read messages aloud automatically",
+   "description": "Allows incoming messages to be read out automatically. Other settings still apply.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "Messaging__cal_mute_button_enabled",
+   "category": "messaging",
+   "title": "Mute button on conversations",
+   "description": "Adds mute/unmute to conversations.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "Messaging__smart_action_navigate_enabled_for_all_nav_apps",
+   "category": "messaging",
+   "title": "Navigate action for all nav apps",
+   "description": "Offers the \"navigate\" smart action with more navigation apps.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "Messaging__image_description_readout_enabled",
+   "category": "messaging",
+   "title": "Describe images",
+   "description": "Lets the assistant describe images in messages.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "Coolwalk__assistant_suggestions_enabled",
+   "category": "assistant",
+   "title": "Assistant suggestions",
+   "description": "Assistant suggestion chips on the home screen.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "Assistant__gemini_luminous_ui_updates",
+   "category": "assistant",
+   "title": "Gemini voice UI",
+   "description": "Experimental Gemini voice interface.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "AceFeature__actionable_insight_enabled",
+   "category": "assistant",
+   "title": "Actionable insights",
+   "description": "Turns contextual insights into suggestions you can act on.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "Assistant__transcription_character_limit",
+   "category": "assistant",
+   "title": "Transcription length",
+   "description": "Maximum number of characters shown when the assistant transcribes what you say.",
+   "risk": "safe",
+   "suggest": "80 (default 45)"
+  },
+  {
+   "name": "SystemUi__use_cal_voice_plate_for_gemini",
+   "category": "assistant",
+   "title": "Newer Gemini voice panel",
+   "description": "Uses the newer voice panel for Gemini.",
+   "risk": "safe"
+  },
+  {
+   "name": "UserEducation__assistant_tooltip_nth_run_button_enabled",
+   "category": "assistant",
+   "title": "Assistant hint bubbles",
+   "description": "Hint bubbles that teach assistant features.",
+   "risk": "safe",
+   "suggest": "false to stop them"
+  },
+  {
+   "name": "Csat__assistant_csat_enabled",
+   "category": "assistant",
+   "title": "Assistant satisfaction prompts",
+   "description": "\"How was the assistant?\" prompts.",
+   "risk": "safe",
+   "suggest": "false to stop them"
+  },
+  {
+   "name": "Assistant__quick_feedback_triggering_rate",
+   "category": "assistant",
+   "title": "Assistant feedback rate",
+   "description": "How often a quick feedback prompt appears after using the assistant, as a fraction.",
+   "risk": "safe",
+   "suggest": "0 to stop them"
+  },
+  {
+   "name": "Dialer__quick_feedback_display_rate",
+   "category": "assistant",
+   "title": "Call feedback rate",
+   "description": "How often a quick feedback prompt appears after calls, as a fraction.",
+   "risk": "safe",
+   "suggest": "0 to stop them"
+  },
+  {
+   "name": "Watevra__primary_actions_on_coolwalk",
+   "category": "navigation",
+   "title": "Main action next to arrival time",
+   "description": "Puts a navigation app's main action button next to the arrival estimate.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "CarAppLibrary__allow_tall_narrow_for_nav_apps",
+   "category": "navigation",
+   "title": "Tall/narrow navigation layout",
+   "description": "Lets navigation apps use a tall, narrow layout.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "Watevra__disable_alphajump",
+   "category": "navigation",
+   "title": "Hide A-Z jump",
+   "description": "The name suggests it removes the A-Z jump button in long lists. Not confirmed.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "VideoEncoderParams__max_qp_wireless",
+   "category": "wireless",
+   "title": "Wireless picture quality (max QP)",
+   "description": "Upper limit of video compression over Wi-Fi. Lower means a sharper picture and more data; go back if the picture stutters.",
+   "risk": "may_break",
+   "suggest": "26 (default 30)"
+  },
+  {
+   "name": "VideoEncoderParams__min_qp_wireless",
+   "category": "wireless",
+   "title": "Wireless picture quality (min QP)",
+   "description": "Lower limit of video compression over Wi-Fi.",
+   "risk": "may_break"
+  },
+  {
+   "name": "AudioBufferingFeature__default_minimum_audio_buffers_for_wifi",
+   "category": "wireless",
+   "title": "Wi-Fi audio buffering",
+   "description": "Minimum audio buffering over Wi-Fi. More buffering can fix crackling but adds delay.",
+   "risk": "may_break",
+   "suggest": "12 (default 8)"
+  },
+  {
+   "name": "WirelessProjectionInGearhead__start_from_notification_enabled",
+   "category": "wireless",
+   "title": "Start wireless from a notification",
+   "description": "A phone notification you can tap to start wireless Android Auto.",
+   "risk": "safe",
+   "suggest": "true"
+  },
+  {
+   "name": "WirelessProjectionInGearhead__enable_dual_sta",
+   "category": "wireless",
+   "title": "Keep normal Wi-Fi",
+   "description": "Asks for a second Wi-Fi connection so the phone keeps its normal Wi-Fi while connected to the car. Depends on the phone.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "WirelessProjectionInGearhead__wifi_lock_selected_option_in_network_request_manager",
+   "category": "wireless",
+   "title": "Wi-Fi lock mode",
+   "description": "Wi-Fi lock used during projection: no_lock, low_latency or high_performance. Any other text can crash Android Auto.",
+   "risk": "may_break"
+  },
+  {
+   "name": "WirelessProjectionInGearhead__dongle_device_name_matches",
+   "category": "wireless",
+   "title": "Wireless adapter names",
+   "description": "Comma-separated Bluetooth name fragments Android Auto uses to recognise wireless adapters.",
+   "risk": "experimental"
+  },
+  {
+   "name": "BluetoothPairing__prevent_rebonding_during_wireless_projection",
+   "category": "wireless",
+   "title": "Stop re-pairing",
+   "description": "Stops automatic Bluetooth re-pairing during a wireless session.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "FrameRateRestrictions__fps_limit_for_restriction_level_medium",
+   "category": "wireless",
+   "title": "Frame cap when warm",
+   "description": "Frame-rate limit applied when the phone is moderately warm.",
+   "risk": "may_break"
+  },
+  {
+   "name": "CradleFeature__all_app_launcher_enabled",
+   "category": "apps",
+   "title": "Phone Apps tab",
+   "description": "Adds a \"Phone Apps\" tab to the launcher for use while parked. May depend on Android version and head unit.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "CradleFeature__allow_video_apps",
+   "category": "apps",
+   "title": "Video apps while parked",
+   "description": "Makes video apps eligible for parked mode. May depend on Android version and head unit.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "CradleFeature__show_dpi_picker",
+   "category": "apps",
+   "title": "Density picker for phone apps",
+   "description": "Lets you choose the display density for projected phone apps.",
+   "risk": "experimental",
+   "suggest": "true"
+  },
+  {
+   "name": "TouchpadUiNavigation__base_fraction",
+   "category": "input",
+   "title": "Touchpad movement base",
+   "description": "Base value used to work out how far a touchpad movement must travel to count.",
+   "risk": "experimental"
+  },
+  {
+   "name": "TouchpadUiNavigation__min_size_mm",
+   "category": "input",
+   "title": "Touchpad minimum movement",
+   "description": "Smallest physical movement, in millimetres, that counts as a step.",
+   "risk": "experimental"
+  },
+  {
+   "name": "TouchpadUiNavigation__multimove_penalty_mm",
+   "category": "input",
+   "title": "Touchpad multi-move penalty",
+   "description": "Extra distance required when several moves are recognised in a row.",
+   "risk": "experimental"
+  },
+  {
+   "name": "TouchpadUiNavigation__tuning_enabled",
+   "category": "input",
+   "title": "Touchpad tuning",
+   "description": "The name suggests it enables the tuning values above. Not confirmed.",
+   "risk": "experimental"
+  },
+  {
+   "name": "ContentBrowse__enable_speed_bump_projected",
+   "category": "restrictions",
+   "title": "List limiter type",
+   "description": "Chooses the limiter for list browsing while moving: true is the rate-based SpeedBump, false the older tap counter. It switches between them; it does not remove limiting. This is a driving-safety limit; change it with care.",
+   "risk": "safety"
+  },
+  {
+   "name": "Watevra__speedbump_enabled",
+   "category": "restrictions",
+   "title": "App limiter type",
+   "description": "Same choice of limiter for apps built on the car app library. This is a driving-safety limit; change it with care.",
+   "risk": "safety"
+  },
+  {
+   "name": "Media__projected_speedbump_enabled",
+   "category": "restrictions",
+   "title": "Media limiter",
+   "description": "Rate-based limiter for media browsing while moving. This is a driving-safety limit; change it with care.",
+   "risk": "safety"
+  },
+  {
+   "name": "ContentBrowse__drawer_default_allowed_taps_touchpad",
+   "category": "restrictions",
+   "title": "Tap budget (touchpad/knob)",
+   "description": "How many steps you may take in a list with a touchpad or knob before browsing pauses, under the tap-counter limiter. This is a driving-safety limit; change it with care.",
+   "risk": "safety"
+  },
+  {
+   "name": "Watevra__speedbump_map_interactivity_enabled",
+   "category": "restrictions",
+   "title": "Map interaction rules",
+   "description": "Changes the rules for tapping, panning and zooming maps while moving. This is a driving-safety limit; change it with care.",
+   "risk": "safety"
+  },
+  {
+   "name": "CarAppLibrary__conversation_item_max_message_lines_while_driving",
+   "category": "restrictions",
+   "title": "Message lines while driving",
+   "description": "How many lines of a message are shown while moving. This is a driving-safety limit; change it with care.",
+   "risk": "safety"
+  },
+  {
+   "name": "ContentBrowse__sixtap_force_enabled",
+   "category": "restrictions",
+   "title": "Tap counter while parked",
+   "description": "Keeps the tap counter active even when parked. Useful only for testing.",
+   "risk": "safe"
+  },
+  {
+   "name": "ContentBrowse__speedbump_force_enabled",
+   "category": "restrictions",
+   "title": "SpeedBump while parked",
+   "description": "Keeps the rate-based limiter active even when parked. Handy for seeing it in DHU.",
+   "risk": "safe"
+  },
+  {
+   "name": "ContentBrowse__keyboard_force_disabled",
+   "category": "restrictions",
+   "title": "Force keyboard off",
+   "description": "Forces the on-screen keyboard off as if driving.",
+   "risk": "safe"
+  },
+  {
+   "name": "StratoFeature__ignore_input_restrictions",
+   "category": "restrictions",
+   "title": "Bypass input restrictions",
+   "description": "Bypasses part of the input restrictions on one internal path. How much it covers is not known. This is a driving-safety limit; change it with care.",
+   "risk": "safety"
+  },
+  {
+   "name": "DeveloperOverrides__force_lite_mode",
+   "category": "system",
+   "title": "Lite mode",
+   "description": "The name suggests a reduced \"lite\" mode. Effect not confirmed.",
+   "risk": "experimental"
+  },
+  {
+   "name": "Performance__pre_warm_activities_enabled",
+   "category": "system",
+   "title": "Preload screens",
+   "description": "Preloads screens for faster switching. May not be noticeable.",
+   "risk": "safe",
+   "suggest": "true"
+  }
+ ]
+}
