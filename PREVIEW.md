@@ -16,25 +16,38 @@ show, so you can check a flag change without going to the car.
 
 ## Every session
 
-1. Connect the phone by USB and unlock it.
-2. Phone: Android Auto settings > overflow menu > **Start head unit server**.
-3. PC, from the repository folder:
+Connect the phone by USB, unlock it, and from the repository folder run:
 
-   ```powershell
-   .\scripts\dhu.ps1
-   ```
+```powershell
+.\scripts\dhu.ps1
+```
 
-   The script checks that one device is connected, runs `adb forward tcp:5277 tcp:5277`, and
-   starts DHU with the rotary profile in `scripts\dhu-rotary.ini` (800x480, no touch, rotary
-   controller). Use `-Touch` for DHU's default touch-screen profile, or `-SdkPath` if the SDK is
-   not found automatically.
+The script does the whole loop:
 
-   If PowerShell refuses to run scripts:
-   `powershell -ExecutionPolicy Bypass -File .\scripts\dhu.ps1`
+1. force-stops Android Auto, so it re-reads its flags;
+2. starts Android Auto's head unit server (it looks up the service name on your Android Auto
+   version, and needs root on the phone);
+3. runs `adb forward tcp:5277 tcp:5277`;
+4. starts DHU with the rotary profile in `scripts\dhu-rotary.ini` (800x480, no touch).
+
+Options: `-NoRestart` leaves Android Auto running, `-Touch` uses DHU's default touch profile,
+`-SdkPath` points at the SDK if it is not found automatically.
+
+If PowerShell refuses to run scripts:
+`powershell -ExecutionPolicy Bypass -File .\scripts\dhu.ps1`
+
+If the script cannot find or start the head unit server, start it by hand: phone > Android Auto
+settings > three-dot menu > **Start head unit server**.
+
+The same restart is available on the phone: the app's home screen has
+**Restart Android Auto + start head unit server**, and there is a Quick Settings tile
+("Restart AA for DHU") you can add to the notification shade.
 
 The manual equivalent is:
 
 ```powershell
+adb shell "su -c 'am force-stop com.google.android.projection.gearhead'"
+# start the head unit server on the phone
 adb forward tcp:5277 tcp:5277
 cd <sdk>\extras\google\auto
 .\desktop-head-unit.exe -c <repo>\scripts\dhu-rotary.ini
@@ -42,12 +55,8 @@ cd <sdk>\extras\google\auto
 
 ## Seeing a flag change
 
-Android Auto reads its flags when it starts, so after changing anything:
-
-1. Close DHU (or disconnect the car).
-2. Restart Android Auto: in this app, Menu > Override lab > *Restart Android Auto*, or
-   `adb shell am force-stop com.google.android.projection.gearhead`.
-3. Start the head unit server again (step 2 above) and relaunch DHU.
+Android Auto reads its flags when it starts. After changing a flag in AA Experiments, close DHU
+and run the script again; it restarts Android Auto for you.
 
 ## Rotary controls in DHU
 

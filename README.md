@@ -1,65 +1,52 @@
-[![Crowdin](https://badges.crowdin.net/aa-aio-tweaker/localized.svg)](https://crowdin.com/project/aa-aio-tweaker)
-# AA-AIO-TWEAKER
+# AA Tweaker (personal fork)
 
-The ultimate All-In-One Utility to tweak Android Auto behaviour.
+A companion app for customising Android Auto on a rooted phone. This fork no longer changes flags
+itself: on current Google Play Services the database tables the original app wrote to
+(`FlagOverrides`, `Flags`) no longer exist. Flags are changed with
+[AA Experiments](https://github.com/HighwindBR/AA-Experiments) (an LSPosed module); this app is
+the reference and tooling around it.
 
-# How do I use it?
+## What it does
 
-Allow root access, choose what you want, reboot, and then forget about it :)
+- **Flag reference.** About 100 Android Auto flags with a plain-English name, a short description
+  of what changes in the car, a risk label (safe / may break / experimental / driving safety) and
+  a suggested value. Where the effect is not known, it says so. Searchable and grouped by category.
+- **Your real values.** For each flag it shows the built-in default, the value Google's server set
+  on your phone (read from Play Services with root), and your own override once you import an
+  AA Experiments export (menu > Import).
+- **Your own results.** Mark each flag as works / no visible effect / broke something, with a note.
+  The Android Auto version is stored with the mark, and the app points out marks made on a
+  different version.
+- **Preview loop.** One tap (or a Quick Settings tile) restarts Android Auto and starts its
+  developer head unit server, ready for the Desktop Head Unit. See [PREVIEW.md](PREVIEW.md).
+- **Messenger relay.** Re-posts Facebook Messenger notifications in a form Android Auto accepts and
+  routes replies back through Messenger.
+- **Diagnostics.** A read-only report of versions, root, and the Play Services flag database.
 
-# How does it work?
+The app has no network permission. Nothing leaves the phone.
 
-This app uses SQLite commands to override some flags related to Android Auto into the Google Play Services. 
+## Requirements
 
-Google Play Services control a lot of features inside Android Auto. Some of them are core functionality of Android Auto, some of them are upcoming feature that are simply not yet released.
+- Root (Magisk or similar) for restart, head unit server and reading Google's flag values.
+- AA Experiments with an LSPosed-compatible framework to actually change flags.
 
-What this app does is making some SQLite queries in order to alter some features of Android Auto. 
+## Build
 
-# Example of available commands
+JDK 17 or newer and the Android SDK (platform 35).
 
-- Patch for custom Android Auto apps
-- Disable speed restrictions while driving (preview of messages will be shown always)
-- Disable six tap limit (the banner asking to pay attention to road will not be shown anymore)
-- Disable bluetooth auto connection
-- Enable force Widescreen (or force disable it)
-- Disable unnecessary telemetry
-- Set notification duration from 0ms to 20 seconds
-- Set media notification duration on Navbar to up to 15 minutes
-- Enable MultiDisplay and clustersim feature
-- Force enable Coolwalk UI
+```bash
+./gradlew assembleDebug        # app/build/outputs/apk/debug/
+./gradlew testDebugUnitTest
+```
 
-And much more :)
+Release builds are signed with the debug key unless `local.properties` contains `STORELOCATION`,
+`STOREPASSWORD` and `KEYPASSWORD`.
 
-# How is this different from AA Phenotype Patcher?
+## Credits and license
 
-AA AIO TWEAKER is a fork of AA Phenotype Patcher and a lot of the original source has been re-used for coding this app. As of January 2021, with the new Android Auto 6.0 update, AA AIO TWEAKER provides a new method to patch Android Auto custom apps that is new and not available (yet) on AA Phenotype Patcher. If you are interested in patching custom apps, you might want to use AA AIO TWEAKER instead.
-
-# Can I use this app instead of AA Phenotype Patcher?
-
-Yes you can. With Android Auto being updated, Phenotype Patcher does not have a suitable method anymore due to Android Auto's changes.
-
-# How is this different from Sensible Android Auto: Xposed?
-
-This app doesn't need Xposed, which in some cases is one more pain to have. Also, it should survive Android Auto updates (as long as the flags don't need edits) without any user intrvention.
-
-# Can I use this app instead of Sensible Android Auto: Xposed?
-
-Yes, you can. The functionaility is the same, the only "advantage" is not having to install Xposed to make it work. This app won't check if you have SAAX installed so you won't have a green check status at the start. If you are familiar with SAAX and you want to keep it, you may not want to disable speed limitation and six tap with this app.
-
-
-## NO REUPLOADS
-
-Please, if you want to share AA AIO TWEAKER, do not reupload the APK elsewhere. Just redirect the users to this download page. 
-## NEW
-
-AA AIO TWEAKER is open to translations! [Join translations on Crowdin](https://crwd.in/aa-aio-tweaker)
-
-
-## [DOWNLOAD](https://github.com/shmykelsa/AA-Tweaker/releases)
-
-Credits:<br>
-[Jen94](https://github.com/jen94) for the original app whitelist hack <br>
-[SAAX by agentdr8](https://gitlab.com/agentdr8/saax) who inspired me for some features of this app <br>
-[AA Phenotype Patcher by Eselter](https://github.com/Eselter/AA-Phenotype-Patcher) <br>
-
-Icon made by [FreePik](http://www.freepik.com/) author: [FlatIcon](https://www.flaticon.com/)
+GPL-2.0, see [LICENSE](LICENSE). Forked from
+[AA AIO Tweaker](https://github.com/shmykelsa/AA-Tweaker) by shmykelsa, itself based on
+AA Phenotype Patcher by Eselter. Flag names, types and defaults in the reference are facts read
+from Android Auto and from the AA Experiments feature catalog; the descriptions are this
+project's own wording. The layout of Play Services' stored flag lists was worked out by the
+GMS Flags Reborn project.
